@@ -22,11 +22,17 @@ int chargeRateIsOk(float chargeRate){
   }
   return 1;
 }
-int batteryIsOk(float temperature, float soc, float chargeRate) {
+int TempeartureSocIsOk(float temperature, float soc){
   if(!TemperatureIsOk(temperature)){
     return 0;
   }
   if(!socIsOk(soc)){
+    return 0;
+  }
+  return 1;
+}
+int batteryIsOk(float temperature, float soc, float chargeRate) {
+  if(!TempeartureSocIsOk(temperature, soc)){
     return 0;
   }
   if(!chargeRateIsOk(chargeRate)){
