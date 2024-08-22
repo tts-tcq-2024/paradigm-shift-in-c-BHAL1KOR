@@ -8,7 +8,7 @@ int TemperatureIsOk(float temperature){
   }
 }
 int socIsOk(float soc){
-  (soc < 20 || soc > 80) {
+  if(soc < 20 || soc > 80) {
     printf("State  of Charge out of range!\n");
     return 0;
   }
