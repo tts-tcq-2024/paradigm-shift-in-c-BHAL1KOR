@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "BatteryHealthChecker.h"
 #include "BatteryHealthCheckerTest.h"
 
 int main() {
