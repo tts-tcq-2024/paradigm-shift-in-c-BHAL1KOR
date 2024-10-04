@@ -7,10 +7,10 @@
 #define SOC_UPPER_LIMIT 80
 #define SOC_LOWER_LIMIT 20
 #define CHARGE_RATE_UPPER_LIMIT 0.8
-
-#define TEMPERATURE_WARNING_TOLERANCE (TEMPERATURE_UPPER_LIMIT * 0.05)
-#define SOC_WARNING_TOLERANCE (SOC_UPPER_LIMIT * 0.05)
-#define CHARGE_RATE_WARNING_TOLERANCE (CHARGE_RATE_UPPER_LIMIT * 0.05)
+#define WARNING_TOLERANCE_PERCENTAGE 0.05
+#define TEMPERATURE_WARNING_TOLERANCE (TEMPERATURE_UPPER_LIMIT * WARNING_TOLERANCE_PERCENTAGE)
+#define SOC_WARNING_TOLERANCE (SOC_UPPER_LIMIT * WARNING_TOLERANCE_PERCENTAGE)
+#define CHARGE_RATE_WARNING_TOLERANCE (CHARGE_RATE_UPPER_LIMIT * WARNING_TOLERANCE_PERCENTAGE)
 
 void PrintWarning(const char* parameter, const char* condition) {
     printf("Warning: %s %s\n", parameter, condition);
@@ -20,23 +20,39 @@ void PrintBreach(const char* parameter, const char* condition) {
     printf("%s out of range: %s!\n", parameter, condition);
 }
 
+int IsBelowLowerLimit(float value, float lowerLimit) {
+    return value < lowerLimit;
+}
+
+int IsAboveUpperLimit(float value, float upperLimit) {
+    return value > upperLimit;
+}
+
+int IsApproachingLowerLimit(float value, float lowerLimit, float warningTolerance) {
+    return value < lowerLimit + warningTolerance;
+}
+
+int IsApproachingUpperLimit(float value, float upperLimit, float warningTolerance) {
+    return value > upperLimit - warningTolerance;
+}
+
 int CheckLowerLimit(float value, float lowerLimit, float warningTolerance, const char* parameter, int warningEnabled) {
-    if (value < lowerLimit) {
+    if (IsBelowLowerLimit(value, lowerLimit)) {
         PrintBreach(parameter, "Too low");
         return 0;
     }
-    if (warningEnabled && value < lowerLimit + warningTolerance) {
+    if (warningEnabled && IsApproachingLowerLimit(value, lowerLimit, warningTolerance)) {
         PrintWarning(parameter, "approaching lower limit");
     }
     return 1;
 }
 
 int CheckUpperLimit(float value, float upperLimit, float warningTolerance, const char* parameter, int warningEnabled) {
-    if (value > upperLimit) {
+    if (IsAboveUpperLimit(value, upperLimit)) {
         PrintBreach(parameter, "Too high");
         return 0;
     }
-    if (warningEnabled && value > upperLimit - warningTolerance) {
+    if (warningEnabled && IsApproachingUpperLimit(value, upperLimit, warningTolerance)) {
         PrintWarning(parameter, "approaching upper limit");
     }
     return 1;
