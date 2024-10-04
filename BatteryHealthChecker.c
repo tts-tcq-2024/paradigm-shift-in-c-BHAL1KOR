@@ -36,24 +36,48 @@ int IsApproachingUpperLimit(float value, float upperLimit, float warningToleranc
     return value > upperLimit - warningTolerance;
 }
 
-int CheckLowerLimit(float value, float lowerLimit, float warningTolerance, const char* parameter, int warningEnabled) {
+void CheckLowerLimitBreach(float value, float lowerLimit, const char* parameter) {
     if (IsBelowLowerLimit(value, lowerLimit)) {
         PrintBreach(parameter, "Too low");
+    }
+}
+
+void CheckLowerLimitWarning(float value, float lowerLimit, float warningTolerance, const char* parameter) {
+    if (IsApproachingLowerLimit(value, lowerLimit, warningTolerance)) {
+        PrintWarning(parameter, "approaching lower limit");
+    }
+}
+
+int CheckLowerLimit(float value, float lowerLimit, float warningTolerance, const char* parameter, int warningEnabled) {
+    CheckLowerLimitBreach(value, lowerLimit, parameter);
+    if (IsBelowLowerLimit(value, lowerLimit)) {
         return 0;
     }
-    if (warningEnabled && IsApproachingLowerLimit(value, lowerLimit, warningTolerance)) {
-        PrintWarning(parameter, "approaching lower limit");
+    if (warningEnabled) {
+        CheckLowerLimitWarning(value, lowerLimit, warningTolerance, parameter);
     }
     return 1;
 }
 
-int CheckUpperLimit(float value, float upperLimit, float warningTolerance, const char* parameter, int warningEnabled) {
+void CheckUpperLimitBreach(float value, float upperLimit, const char* parameter) {
     if (IsAboveUpperLimit(value, upperLimit)) {
         PrintBreach(parameter, "Too high");
+    }
+}
+
+void CheckUpperLimitWarning(float value, float upperLimit, float warningTolerance, const char* parameter) {
+    if (IsApproachingUpperLimit(value, upperLimit, warningTolerance)) {
+        PrintWarning(parameter, "approaching upper limit");
+    }
+}
+
+int CheckUpperLimit(float value, float upperLimit, float warningTolerance, const char* parameter, int warningEnabled) {
+    CheckUpperLimitBreach(value, upperLimit, parameter);
+    if (IsAboveUpperLimit(value, upperLimit)) {
         return 0;
     }
-    if (warningEnabled && IsApproachingUpperLimit(value, upperLimit, warningTolerance)) {
-        PrintWarning(parameter, "approaching upper limit");
+    if (warningEnabled) {
+        CheckUpperLimitWarning(value, upperLimit, warningTolerance, parameter);
     }
     return 1;
 }
