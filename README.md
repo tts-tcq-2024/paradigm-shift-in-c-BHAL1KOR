@@ -59,3 +59,14 @@ Shorten the Semantic distance
 - Functional to express relation between input and output
 - Object oriented to encapsulate state with actions
 - Apect oriented to capture repeating aspects
+
+## Code Regeneration and Extension Adoption
+
+During the process of adopting necessary extensions, it was required to modify and regenerate the code from the beginning due to the following reasons:
+
+- Initial focus was primarily on the Cyclomatic Complexity Number (CCN) reduction approach.
+- Test cases were not adequately improved.
+- The code did not fully cover all the specified requirements.
+- MACROs were not defined.
+- Pure functions were not completely implemented.
+- Modularity approach was not taken care
